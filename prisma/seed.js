@@ -131,4 +131,43 @@ const prisma = new PrismaClient();
   } finally {
     await prisma.$disconnect();
   }
+
+  try {
+    const missionBackEndNode = await prisma.missionCommander.upsert({
+      where: { name: 'Carlo' },
+      update: {},
+      create: {
+        name: 'Carlo',
+        username: 'carlogilmar',
+        mainStack: 'NodeJS',
+      },
+    });
+
+    const missionBackEndJava = await prisma.missionCommander.upsert({
+      where: { name: 'Fernanda' },
+      update: {},
+      create: {
+        name: 'Fernanda',
+        username: 'FernandaOchoa',
+        mainStack: 'Java',
+      },
+    });
+
+    const missionFrontEndJS = await prisma.missionCommander.upsert({
+      where: { name: 'Rodrigo' },
+      update: {},
+      create: {
+        name: 'Rodrigo',
+        username: 'romarpla',
+        mainStack: 'JavaScript',
+      },
+    });
+
+    console.log('Create 3 mission commanders');
+  } catch(e) {
+    console.error(e);
+    process.exit(1);
+  } finally {
+    await prisma.$disconnect();
+  }
 })();

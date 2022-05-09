@@ -38,7 +38,7 @@ app.get('/explorers/:id', async (req, res) => {
 });
 
 // Crear nuevos explorers con POST
-app.post('/explorers', async (req, res) => {
+app.post('/explorers/', async (req, res) => {
     const explorer = {
       name: req.body.name,
       username: req.body.username,
@@ -88,7 +88,7 @@ app.get('/students/:id', async (req, res) => {
 });
 
 // Crear nuevos students con POST
-app.post('/students', async (req, res) => {
+app.post('/students/', async (req, res) => {
     const student = {
       name: req.body.name,
       missionCommander: req.body.missionCommander,
@@ -108,8 +108,8 @@ app.put('/students/:id', async (req, res) => {
 			id: id
 		},
 		data: {
-            missionCommander: req.body.missionCommander,
-            enrollments: req.body.enrollments
+      missionCommander: req.body.missionCommander,
+      enrollments: req.body.enrollments
 		}
 	})
   
@@ -121,6 +121,57 @@ app.delete('/students/:id', async (req, res) => {
 	const id = parseInt(req.params.id);
 	await prisma.student.delete({where: {id: id}});  
   return res.json({message: "Student eliminado correctamente"});
+});
+
+// MISSION COMMANDERS
+
+// Recibir mission Commander
+app.get('/missionCommander', async (req, res) => {
+  const allMissionCommander =  await prisma.missionCommander.findMany({});    
+  res.json(allMissionCommander);
+});
+
+// Recibir Mission Commander por ID
+app.get('/missionCommander/:id', async (req, res) => {
+  const id = req.params.id;
+  const missionCommander = await prisma.missionCommander.findUnique({where: {id: parseInt(id)}});    
+  res.json(missionCommander);
+});
+
+// Crear nuevos Mission Commanders con POST
+app.post('/missionCommander', async (req, res) => {
+  const missionCommander = {
+    name: req.body.name,
+    username: req.body.username,
+    mainStack: req.body.mainStack
+  };
+  const message = 'Mission Commander creado.';
+  await prisma.missionCommander.create({data: missionCommander});    
+  return res.json({message});
+});
+
+// Actualizar Mission Commander con PUT
+app.put('/missionCommander/:id', async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  await prisma.missionCommander.update({
+  where: {
+    id: id
+  },
+  data: {
+    username: req.body.username,
+    mainStack: req.body.mainStack
+  }
+})
+
+return res.json({message: "Mission Commander actualizado correctamente"});
+});
+
+// Borrar Mission Commander
+app.delete('/missionCommander/:id', async (req, res) => {
+  const id = parseInt(req.params.id);
+  await prisma.missionCommander.delete({where: {id: id}});  
+  return res.json({message: "Mission Commander eliminado correctamente"});
 });
 
 app.listen(port, () => {
